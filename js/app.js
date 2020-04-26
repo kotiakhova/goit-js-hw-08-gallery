@@ -32,27 +32,26 @@ ul.append(...bigTemplateLine);
 const modalWindow = document.querySelector('.js-lightbox');
 
 
-ul.addEventListener("click", (e) => {
+ul.addEventListener("click", (e) => openModal(e));
+
+document.querySelector('button[data-action="close-lightbox"]')
+.addEventListener('click', (e) => closeModal(e))
+
+document.querySelector('.lightbox__content')
+.addEventListener('click', (e) => closeByModal(e));
+
+
+
+
+function openModal(e) {
     e.preventDefault();
     document.querySelector('img.lightbox__image').setAttribute('src',e.target.getAttribute("data-source"));
 
     modalWindow.classList.add('is-open'); 
     window.addEventListener('keydown', closeByEscape)
 
+};
 
-});
-document.querySelector('button[data-action="close-lightbox"]').addEventListener('click', (e) => {
-    closeModal(e)
-    document.querySelector('img.lightbox__image').setAttribute('src','');
-})
-
-document.querySelector('.lightbox__content').addEventListener('click', (e) => {
-    if (e.target !== e.currentTarget) {
-        return
-    } else {
-        closeModal(e)
-    }
-})
 function closeByEscape(e) {
     if (e.code !== 'Escape') {
 
@@ -64,6 +63,14 @@ function closeByEscape(e) {
 function closeModal(e) {
     modalWindow.classList.remove('is-open'); 
     window.removeEventListener('keydown', closeByEscape);
+    document.querySelector('img.lightbox__image').setAttribute('src','');
 
 }
+function closeByModal(e) {
+    if (e.target !== e.currentTarget) {
+        return
+    } else {
+        closeModal(e)
+    }
 
+}
