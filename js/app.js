@@ -8,27 +8,42 @@ let bigTemplateLine = images.map(elem => createTemplateLine (elem));
 
 function createTemplateLine (obj) {
 
-    let point = document.createElement('li');
-    point.classList.add('gallery__item');
+    // let point = document.createElement('li');
+    // point.classList.add('gallery__item');
 
-    let link = document.createElement("a");
-    link.classList.add('gallery__link');
-    link.setAttribute('href', obj.original);
+    // let link = document.createElement("a");
+    // link.classList.add('gallery__link');
+    // link.setAttribute('href', obj.original);
 
-    let image = document.createElement('img');
-    image.classList.add('gallery__image');
-    image.setAttribute('src', obj.preview);
-    image.setAttribute('data-source', obj.original);
-    image.setAttribute('alt', "Tulips");
+    // let image = document.createElement('img');
+    // image.classList.add('gallery__image');
+    // image.setAttribute('src', obj.preview);
+    // image.setAttribute('data-source', obj.original);
+    // image.setAttribute('alt', "Tulips");
 
-    link.appendChild(image);
-    point.appendChild(link);
+    // link.appendChild(image);
+    // point.appendChild(link);
+
+    let point = `<li class="gallery__item">
+    <a
+      class="gallery__link"
+      href="${obj.original}">
+      <img
+        class="gallery__image"
+        src="${obj.preview}"
+        data-source="${obj.original}"
+        alt="Tulips"
+      />
+    </a>
+  </li>`;
 
 
     return point;
 }
+console.log(bigTemplateLine);
+console.log(...bigTemplateLine);
 
-ul.append(...bigTemplateLine);
+ul.insertAdjacentHTML('afterbegin', bigTemplateLine.join(''));
 const modalWindow = document.querySelector('.js-lightbox');
 
 
