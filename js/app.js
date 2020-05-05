@@ -1,6 +1,6 @@
 import images from '../gallery-items.js'; 
 
-
+let isSlideShow = false;
 const ul = document.querySelector(".js-gallery");
 
 let bigTemplateLine = images.map(elem => createTemplateLine (elem));
@@ -40,8 +40,7 @@ function createTemplateLine (obj) {
 
     return point;
 }
-console.log(bigTemplateLine);
-console.log(...bigTemplateLine);
+
 
 ul.insertAdjacentHTML('afterbegin', bigTemplateLine.join(''));
 const modalWindow = document.querySelector('.js-lightbox');
@@ -63,7 +62,9 @@ function openModal(e) {
     document.querySelector('img.lightbox__image').setAttribute('src',e.target.getAttribute("data-source"));
 
     modalWindow.classList.add('is-open'); 
-    window.addEventListener('keydown', closeByEscape)
+    window.addEventListener('keydown', closeByEscape);
+    window.addEventListener('keydown', slideShowBySpace);
+    window.addEventListener('keydown', rolling)
 
 };
 
@@ -78,7 +79,11 @@ function closeByEscape(e) {
 function closeModal(e) {
     modalWindow.classList.remove('is-open'); 
     window.removeEventListener('keydown', closeByEscape);
+    window.removeEventListener('keydown', slideShowBySpace);
+    window.removeEventListener('keydown', rolling);
     document.querySelector('img.lightbox__image').setAttribute('src','');
+    clearInterval(isSlideShow);
+    isSlideShow = 0;
 
 }
 function closeByModal(e) {
@@ -89,3 +94,64 @@ function closeByModal(e) {
     }
 
 }
+
+
+function slideShowBySpace (e){
+    if (e.code !== 'Space') {
+        return;
+    } else {
+        slideShow (e);
+    }
+}
+
+function slideShow (e){
+
+        if (isSlideShow) {
+            clearInterval(isSlideShow);
+            isSlideShow = 0;
+        } else {
+            isSlideShow = setInterval(onSlideShowTick, 1000);
+
+        }
+
+}
+function onSlideShowTick() {
+    
+    let neededImage = images.find(elem => elem.original === document.querySelector('img.lightbox__image').getAttribute('src'));
+
+    let index = images.indexOf(neededImage) + 1;
+        if (index >= images.length) {
+                index = 0;
+        }
+    document.querySelector('img.lightbox__image').src = images[index].original;
+
+           
+
+}
+
+function rolling (e){
+    switch(e.code) {
+        case 'ArrowRight':
+
+        onSlideShowTick();
+
+
+        break;
+
+        case 'ArrowLeft':
+        
+            let neededImage = images.find(elem => elem.original === document.querySelector('img.lightbox__image').getAttribute('src'));
+ 
+            let index = images.indexOf(neededImage) - 1;
+                if (index < 0) {
+                        index = images.length - 1;
+                }
+            document.querySelector('img.lightbox__image').src = images[index].original;
+
+
+        
+        break;
+    }
+
+}
+
